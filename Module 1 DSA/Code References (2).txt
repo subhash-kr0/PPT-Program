@@ -1,0 +1,164 @@
+1. Valid Parentheses
+// time complexity: O(n)
+// space complexity: O(n)
+
+class Solution:
+    def isValid(self, s: str) -> bool:
+        mapping = {")":"(", "}" : "{", "]" : "["}
+        stack = []
+        for char in s:
+            if char in mapping:
+                top_element = stack.pop() if stack else '#'
+                if mapping[char] != top_element:
+                    return False
+            else:
+                stack.append(char)
+        
+        return not stack
+
+2. Implement Queue using Stacks
+// time complexity: O(n)
+// space complexity: O(n)
+
+class MyQueue:
+
+    def __init__(self):
+        self.stack1 = []
+        self.stack2 = []
+        
+
+    def push(self, x: int) -> None:
+        self.stack1.append(x)
+        
+
+    def pop(self) -> int:
+        if len(self.stack1) == 0 and len(self.stack2) == 0: return -1
+        
+        if len(self.stack2) > 0:
+            return self.stack2.pop()
+        
+        while len(self.stack1) > 1:
+            num = self.stack1.pop()
+            self.stack2.append(num)
+            
+        our_num = self.stack1.pop()
+            
+        return our_num
+        
+
+    def peek(self) -> int:
+        if len(self.stack1) == 0 and len(self.stack2) == 0: return -1
+        
+        if len(self.stack2) > 0:
+            return self.stack2[len(self.stack2) - 1]
+        
+        return self.stack1[0]
+
+    def empty(self) -> bool:
+        return len(self.stack1) == 0 and len(self.stack2) == 0
+
+
+
+----------------------------------------------------------------------
+Jave Code:
+// time complexity: O(n)
+// space complexity: O(n)
+
+class MyQueue {
+
+    public MyQueue() {
+       
+        
+    }
+    private int front;
+    public Stack<Integer> s1 = new Stack<>();
+    public Stack<Integer> s2 = new Stack<>();
+    public void push(int x) {
+        if(s1.empty()){
+                front = x;
+            }
+        s1.push(x);   
+    }
+    
+    public int pop() {
+        if(s2.isEmpty()){
+            while(!s1.isEmpty()){
+                s2.push(s1.pop());
+            }
+        }
+        return s2.pop();
+    }
+    
+    public int peek() {
+        if(!s2.isEmpty()){
+             return s2.peek();
+        }
+        return front;
+    }
+    
+    public boolean empty() {
+        return s1.isEmpty() && s2.isEmpty();
+    }
+}
+
+3. Implement Stack using Queues
+// time complexity: O(n)
+// space complexity: O(1)
+
+class MyStack:
+
+    def __init__(self):
+        self.q1 = []
+        self.q2 = []
+
+    def push(self, x: int) -> None:
+        self.q1.append(x)
+
+    def pop(self) -> int:
+        if len(self.q1) == 0: return -1
+        
+        while len(self.q1) > 1:
+            num = self.q1.pop(0)
+            self.q2.append(num)
+            
+        our_num = self.q1.pop()
+        
+        while len(self.q2) > 0:
+            num = self.q2.pop(0)
+            self.q1.append(num)
+            
+        return our_num
+
+    def top(self) -> int:
+        if len(self.q1) == 0: return -1
+        
+        return self.q1[len(self.q1) - 1]
+
+    def empty(self) -> bool:
+        return len(self.q1) == 0
+
+----------------------------------------------------------
+
+Approach 2:
+
+class MyStack:
+
+    def __init__(self):
+        self.q = deque()
+
+    def push(self, x: int) -> None:
+        self.q.append(x)
+        
+
+    def pop(self) -> int:
+        for i in range(len(self.q) - 1):
+            self.push(self.q.popleft())
+        return self.q.popleft()
+        
+
+    def top(self) -> int:
+        return self.q[-1]
+
+    def empty(self) -> bool:
+        return len(self.q) == 0
+

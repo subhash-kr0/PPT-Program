@@ -1,0 +1,172 @@
+1. Maximum Depth Of Binary Tree
+// time complexity: O(n)
+// space complexity: O(n)
+
+class Solution {
+    public int maxDepth(TreeNode root) {
+        // empty binary tree
+        if(root == null){
+            return 0;
+        }
+        
+        else{
+            // use the concept of recursion
+            int lDepth = maxDepth(root.left);
+            int rDepth = maxDepth(root.right);
+
+            if(lDepth > rDepth){
+                return lDepth + 1;
+            }
+            else{
+                return rDepth + 1;
+            }
+        }
+    }
+}
+
+
+2. Diameter of a Binary Tree
+Link: https://leetcode.com/problems/diameter-of-binary-tree/
+// time complexity: O(n)
+// space complexity: O(n)
+
+class Solution {
+    public int diameterOfBinaryTree(TreeNode root) {
+        int diameter[] = new int[1];
+        // function calling
+        height(root, diameter);
+        return diameter[0];
+    }
+
+    // function definition of height of a tree
+    public int height(TreeNode node, int[] diameter){
+        if(node == null){
+            return 0;
+        }
+
+        // recursive function call
+        int lDepth = height(node.left, diameter);
+        int rDepth = height(node.right, diameter);
+
+        // important to understand
+        diameter[0] = Math.max(diameter[0], lDepth+rDepth);
+
+        return 1 + Math.max(lDepth, rDepth);
+    }
+
+}
+
+
+3. Search in a Binary Search Tree
+// time complexity: O(h)
+// balanced bst: O(log n)
+// skewed bst: O(n)
+// space complexity: stack space: O(h)
+
+class Solution {
+    public TreeNode searchBST(TreeNode root, int val) {
+        // base case condition
+        if(root == null || root.val == val){
+            return root;
+        }
+        // left side via recursion
+        if(val < root.val){
+            // recursive call
+            return searchBST(root.left, val);
+        }
+
+        // right side via recursion
+        else{
+            // recursive call
+            return searchBST(root.right, val);
+        }
+
+    }
+}
+
+4. Kth Smallest Element in BST
+// time complexity: O(n)
+// space complexity: O(n)
+class Solution {
+    public ArrayList<Integer> inOrderTraversal(TreeNode root, ArrayList<Integer> res){
+        if(root == null){
+            return res;
+        }
+
+        inOrderTraversal(root.left, res);
+        res.add(root.val);
+        inOrderTraversal(root.right, res);
+
+        return res;
+    }
+    public int kthSmallest(TreeNode root, int k) {
+        ArrayList<Integer> res = inOrderTraversal(root, new ArrayList<>());
+        return res.get(k-1);
+
+    }
+}
+
+5. Delete Node in a BST
+// time complexity: O(H)
+// space complexity: O(H)
+
+For a balanced BST, it is log N
+For a skewed BST, it is N
+
+class Solution {
+    // towards right side, the minimum value
+    public int successor(TreeNode root){
+        root = root.right;
+        while(root.left != null){
+            root = root.left;
+        }
+
+        return root.val;
+    }
+
+    // towards left side, the maximum value
+    public int predecessor(TreeNode root){
+        root = root.left;
+        while(root.right != null){
+            root = root.right;
+        }
+
+        return root.val;
+    }
+
+    public TreeNode deleteNode(TreeNode root, int key) {
+        // search the key which we need to delete
+        if(root == null){
+            return null;
+        }
+
+        // delete from the right subtree
+        if(key > root.val){
+            root.right = deleteNode(root.right, key);
+        }
+        
+        // delete from the left subtree
+        else if(key < root.val){
+            root.left = deleteNode(root.left, key);
+        }
+
+        else{
+            // case 1: node to be deleted is the leaf node
+            if(root.left == null && root.right == null){
+                root = null;
+            }
+
+            else if(root.right != null){
+                root.val = successor(root);
+                root.right = deleteNode(root.right, root.val);
+            }
+
+            else{
+                root.val = predecessor(root);
+                root.left = deleteNode(root.left, root.val);
+            }
+        }
+        return root;
+    }
+}
+

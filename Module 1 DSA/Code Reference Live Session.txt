@@ -1,0 +1,81 @@
+Reference: https://www.youtube.com/watch?v=vTCmOZwodOM&list=PLcz9-JSejut_E-M3fxRFZ07PYHMbbIFfY&index=23
+Task 1: Check the derivation of time complexity of creation of minheap
+Task 2: https://leetcode.com/problems/top-k-frequent-elements/description/
+1. K Closest Elements
+
+// time complexity: O(n log n)
+// space complexity: O(k)
+
+import java.lang.Math;
+class Solution {
+    public class Point implements Comparable<Point>{
+        int x;
+        int y;
+        double distance;
+        int i;
+
+        // constructor
+        public Point(int x, int y, double distance, int i){
+            this.x = x;
+            this.y = y;
+            this.distance = distance;
+            this.i = i;
+        }
+
+        @Override
+        public int compareTo(Point p1){
+            // sort the data on the basis of distance in the ascending order
+            return Double.compare(this.distance, p1.distance);
+        }
+    }
+
+    public int[][] kClosest(int[][] points, int k) {
+        //1. creation of the minheap
+        PriorityQueue<Point> minheap = new PriorityQueue<Point>();
+        for(int i=0; i<points.length; i++){
+            // points[i][0] = x^2
+            // points[i][1] = y^2
+            double distance = Math.sqrt(points[i][0] * points[i][0] + points[i][1] * points[i][1]);
+            //int distance = points[i][0] * points[i][0] + points[i][1] * points[i][1];
+            // double everywhere for the distance parameter
+            //int rounddistanceValue = (int) distance;
+            minheap.add(new Point(points[i][0], points[i][1], distance, i));
+        }
+
+
+        //2. Deletion from the minheap - k times
+        int[][] result = new int[k][];
+        for(int i=0; i<k; i++){
+            Point point = minheap.remove();
+            result[i] = new int[]{points[point.i][0], points[point.i][1]};
+        }
+
+        return result;
+    }
+}
+
+----------------------------------------------------------------------------------------------------------
+// time complexity: O(n log n)
+// space complexity: O(k)
+
+from heapq import heappush, heappop
+import math
+
+class Solution:
+    def kClosest(self, points: List[List[int]], k: int) -> List[List[int]]:
+        min_heap = []
+        n = len(points)
+        
+        for i in range(n):
+            x = points[i][0]
+            y = points[i][1]
+            heappush(min_heap, (self.get_dist(x,y), points[i]))
+        
+        result = []
+        
+        for i in range(k):
+            result.append(heappop(min_heap)[1])
+        return result
+            
+    def get_dist(self, x, y):
+        return math.sqrt(x**2 + y**2)

@@ -1,0 +1,204 @@
+References: https://stackoverflow.com/questions/2936213/how-does-finding-a-cycle-start-node-in-a-cycle-linked-list-work
+Next Class: Add two number
+
+1. Sort an Array
+Algorithm Name: MergeSort
+time complexity: O(n log n)
+space complexity: O(n)
+
+class Solution {
+    // function definition of mergeProcedure
+    public void mergeProcedure(int[] nums, int low, int mid, int high){
+        // n1 is the size of the left subarray
+        // n2 is the size of the right subarray
+        int n1 = mid - low + 1;
+        int n2 = high - mid;
+
+        // Create leftSubarray and rightSubarray of size n1 and n2
+        int leftSubarray[] = new int[n1];
+        int rightSubarray[] = new int[n2];
+
+        // Copy the elements to left and right subarrays
+        for(int i=0; i<n1; i++){
+            leftSubarray[i] = nums[low +  i];
+        }
+
+        for(int j=0; j<n2; j++){
+            rightSubarray[j] = nums[mid + 1 + j];
+        }
+
+        int i=0, j=0;
+        int k = low;
+
+        while(i < n1 && j < n2){
+            if(leftSubarray[i] <= rightSubarray[j]){
+                nums[k] = leftSubarray[i];
+                i++;
+            }
+
+            else{
+                nums[k] = rightSubarray[j];
+                j++;
+            }
+            k++;
+        }
+
+        // Copy the remaining elements of leftSubarray
+        while(i < n1){
+            nums[k] = leftSubarray[i];
+            i++;
+            k++;
+        }
+
+        // Copy the remaining elements of rightSubarray
+        while(j < n2){
+            nums[k] = rightSubarray[j];
+            j++;
+            k++;
+        }
+    }
+
+    // function definition of mergeSort
+    public void mergeSort(int[] nums, int low, int high){
+        // big problem
+        if(low < high){
+            // divide and conquer algorithm
+            // 1. divide the bigger problem into smaller subproblems
+            int mid = low + (high - low)/2;
+            //2. Conquer via using the recursion
+            // left subarray
+            mergeSort(nums, low, mid);
+            // right subarray
+            mergeSort(nums, mid+1, high);
+            // 3. Combine the solution
+            // function calling
+            mergeProcedure(nums, low, mid, high);
+        }
+    }
+    public int[] sortArray(int[] nums) {
+        // function calling
+        mergeSort(nums, 0, nums.length-1);
+        return nums;
+    }
+}
+
+2. Sort Colors
+// time complexity: O(n)
+// space complexity: O(1)
+
+class Solution:
+    def sortColors(self, nums: List[int]) -> None:
+        """
+        Do not return anything, modify nums in-place instead.
+        """
+        p0 = curr = 0
+        p2 = len(nums) - 1
+
+        while curr <= p2:
+            if(nums[curr] == 0):
+                ## swap nums[curr], nums[p0]
+                nums[p0], nums[curr] = nums[curr], nums[p0]
+                p0 += 1
+                curr += 1
+            elif nums[curr] == 2:
+                nums[p2], nums[curr] = nums[curr], nums[p2]
+                p2 -= 1
+            else:
+                curr += 1
+
+
+
+3. LinkedList Cycle
+// Floyd's Cycle Detection Algorithm
+// For fast pointer -> 2 steps/3 steps 
+// Passing all the test cases
+// time complexity: O(n)
+// space complexity: O(1)
+
+public class Solution {
+    public boolean hasCycle(ListNode head) {
+        //base case condition
+        // linkedlist is empty
+        if(head == null){
+            return false;
+        }
+       
+        ListNode slow = head;
+        ListNode fast = head;
+        // no loop exists
+        int flag = 0;
+        while(slow != null && fast != null && fast.next!=null && fast.next.next!=null){
+            slow = slow.next;
+            fast = fast.next.next.next;
+
+            // loop exists
+            if(slow == fast){
+                flag = 1;
+                break;
+            }
+        }
+
+        if(flag == 0){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+}
+
+4. Reverse Linked List
+// time complexity: O(n)
+// space complexity: O(1)
+
+class Solution {
+    public ListNode reverseList(ListNode head) {
+        ListNode curr = head;
+        ListNode prev = null;
+        ListNode nextPtr = null;
+
+        while(curr != null){
+            nextPtr = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = nextPtr;
+        }
+
+        head = prev;
+        return head;
+        
+    }
+}
+
+5. Palindrome Linked List
+ // time complexity: O(n)
+ // space complexity: O(n)
+ 
+// task - try to implement another approach where the space complexity is constant
+
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        List<Integer> list1 = new ArrayList<>();
+
+        //1. Convert the linkedlist to an arraylist
+        ListNode curr = head;
+        while(curr != null){
+            list1.add(curr.val); 
+            curr = curr.next;
+        }
+
+        //2. Two Pointers Approach
+        int low = 0;
+        int high = list1.size() - 1;
+        while(low < high){
+            if(!list1.get(low).equals(list1.get(high))){
+                return false;
+            }
+
+            low = low + 1;
+            high = high - 1;
+        }
+
+        return true;
+    }
+}
